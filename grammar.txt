@@ -1,0 +1,99 @@
+while true
+[
+    var variable = 'string'
+    var number = 2, number2 = 2
+    var res
+
+    print('text')
+    print(number + number2)
+]
+
+print(value)
+[
+    log(value)
+]
+
+//=============================================================================
+
+token : keyword
+      | identifier
+      | literal
+      | operator
+      ;
+
+expression : assignment_expression
+           | non_assignment_expression
+           ;
+
+assignment_expression : identifier assignment_operator expression ;
+
+non_assignment_expression : literal 
+                          | identifier
+                          | unary_expression
+                          | binary_expression
+                          ;
+
+declaration : variable_declaration
+            | constant_declaration
+            | method_declaration
+            ;
+
+block : '[' statement_list? ']' 
+      | '[' statement? ']'
+      ;
+
+variable_declaration : 'var' identifier
+                     | 'var' identifier assignment_operator expression
+                     ;
+
+constant_declaration : 'const' identifier assignment_operator expression ;
+
+method_declaration : 'meth' identifier '(' literal_list ')' ;
+
+literal_list : literal ('\s' literal_list) ;
+
+assignment_expression : identifier assignment_operator expression ;
+
+identifier : [a-zA-Z]+[a-zA-Z0-9_]* ;
+
+keyword : 'var' | 'while' | 'for' | 'log' | 'true' | 'false' | 'null' ;
+
+operator : assignment_operator
+         | binary_operator
+         | unary_operator
+         ;
+
+unary_operator : - + ~ 
+
+binary_operator : - + * / %
+
+assignment_operator : = -= += *= /=
+
+literal : integer_literal
+        | character_literal
+        | string_literal
+        ;
+
+integer_literal : \d+[\d_]* ;
+
+character_literal : '\'' \w{1} '\'' ;
+
+string_literal : '"' \w+ '"' ;
+
+new_line_character : '\n' | '\r' | '\f'
+
+unary_expression : expression unary_operator
+
+statement : declaration_statement
+          | empty_statement
+          | for_statement
+          ;
+
+empty_statement : new_line_character ;
+
+statement_list : statement+ ;
+
+declaration_statement : variable_declaration new_line_character
+                      | constant_declaration new_line_character
+                      | method_declaration block
+                      ;
