@@ -1,6 +1,7 @@
-while true
+for (var i = 3, i > 0, i--)
 [
     var variable = 'string'
+    const constant = 'value'
     var number = 2, number2 = 2
     var res
 
@@ -8,7 +9,7 @@ while true
     print(number + number2)
 ]
 
-print(value)
+meth print(value)
 [
     log(value)
 ]
@@ -21,25 +22,13 @@ token : keyword
       | operator
       ;
 
-expression : assignment_expression
-           | non_assignment_expression
-           ;
-
-assignment_expression : identifier assignment_operator expression ;
-
-non_assignment_expression : literal 
-                          | identifier
-                          | unary_expression
-                          | binary_expression
-                          ;
-
 declaration : variable_declaration
             | constant_declaration
             | method_declaration
             ;
 
-block : '[' statement_list? ']' 
-      | '[' statement? ']'
+block : '[' statement_list?  ']'
+      | block
       ;
 
 variable_declaration : 'var' identifier
@@ -48,26 +37,32 @@ variable_declaration : 'var' identifier
 
 constant_declaration : 'const' identifier assignment_operator expression ;
 
-method_declaration : 'meth' identifier '(' literal_list ')' ;
+method_declaration : 'meth' identifier '(' parameters ')' ;
 
-literal_list : literal ('\s' literal_list) ;
+parameters : literal_list
+
+literal_list : literal ('\s' literal_list)* ;
 
 assignment_expression : identifier assignment_operator expression ;
 
 identifier : [a-zA-Z]+[a-zA-Z0-9_]* ;
 
-keyword : 'var' | 'while' | 'for' | 'log' | 'true' | 'false' | 'null' ;
+keyword : 'var' | 'const' | 'for' | 'if' | 'else' | 'log' | 'true' | 'false' | 'null'
+        | 'date' | 'time' | 'is' | ;
 
 operator : assignment_operator
          | binary_operator
          | unary_operator
+         | boolean_operator
          ;
 
-unary_operator : - + ~ 
+unary_operator : '-' | '+' | '~' | '--' | '++'
 
-binary_operator : - + * / %
+binary_operator : '-' | '+' | '*' | '/' | '%'
 
-assignment_operator : = -= += *= /=
+assignment_operator : '=' | '-=' | '+=' | '*=' | '/='
+
+boolean_operator : '>' | '<' | '>=' | '<=' | '==' | '~=' | '&' | '|'
 
 literal : integer_literal
         | character_literal
@@ -78,22 +73,59 @@ integer_literal : \d+[\d_]* ;
 
 character_literal : '\'' \w{1} '\'' ;
 
-string_literal : '"' \w+ '"' ;
+string_literal : '\'' \w+ '\'' ;
 
 new_line_character : '\n' | '\r' | '\f'
 
-unary_expression : expression unary_operator
+expression : assignment_expression
+           | non_assignment_expression
+           ;
+
+assignment_expression : identifier (assignment_operator expression)+ ;
+
+non_assignment_expression : literal 
+                          | identifier
+                          | unary_expression
+                          | binary_expression
+                          | boolean_expression
+                          | invocation_expression
+                          ;
+
+unary_expression : unary_operator expression ;
+
+binary_expression : expression binary_operator (expression | binary_expression)+ ;
+
+boolean_expression : expression boolean_operator (expression | boolean_expression)+ ;
+
+invocation_expression : identifier '(' arguments ')' ;
+
+arguments : expression (',' expression)*
 
 statement : declaration_statement
           | empty_statement
-          | for_statement
+          | loop_statement
+          | if_statement
+          | invocation_statement
+          | block
           ;
 
-empty_statement : new_line_character ;
+empty_statement : new_line_character+ ;
 
 statement_list : statement+ ;
 
 declaration_statement : variable_declaration new_line_character
                       | constant_declaration new_line_character
-                      | method_declaration block
+                      | method_declaration block new_line_character
                       ;
+
+loop_statement : 'for' loop_condition block new_line_character
+
+    loop_condition : '(' variable_declaration* ',' boolean_expression* ',' expression* ')'
+
+if_statement : 'if' if_condition block new_line_character
+
+    if_condition : '(' boolean_expression ')'
+
+invocation_statement : invocation_expression new_line_character
+
+program : block
