@@ -47,7 +47,7 @@ assignment_expression : identifier assignment_operator expression ;
 
 identifier : [a-zA-Z]+[a-zA-Z0-9_]* ;
 
-keyword : 'var' | 'const' | 'for' | 'if' | 'else' | 'log' | 'true' | 'false' | 'null'
+keyword : 'var' | 'const' | 'for' | 'if' | 'else' | 'pass' | 'log' | 'true' | 'false' | 'null'
         | 'date' | 'time' | 'is' | ;
 
 operator : assignment_operator
@@ -83,7 +83,7 @@ expression : assignment_expression
 
 assignment_expression : identifier (assignment_operator expression)+ ;
 
-non_assignment_expression : literal 
+non_assignment_expression : literal
                           | identifier
                           | unary_expression
                           | binary_expression
@@ -97,7 +97,7 @@ binary_expression : expression binary_operator (expression | binary_expression)+
 
 boolean_expression : expression boolean_operator (expression | boolean_expression)+ ;
 
-invocation_expression : identifier '(' arguments ')' ;
+invocation_expression : identifier '(' arguments? ')' ;
 
 arguments : expression (',' expression)*
 
