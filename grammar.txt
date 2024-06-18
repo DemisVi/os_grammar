@@ -122,10 +122,12 @@ loop_statement : 'for' loop_condition block new_line_character
 
     loop_condition : '(' variable_declaration* ',' boolean_expression* ',' expression* ')'
 
-if_statement : 'if' if_condition block new_line_character
+if_statement : 'if' if_condition block ('else' block | 'else' if_statement)? new_line_character
 
     if_condition : '(' boolean_expression ')'
 
 invocation_statement : invocation_expression new_line_character
 
-program : block
+program : toplevel_block
+
+toplevel_block : '[' invocation_statement+ ']'
